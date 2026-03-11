@@ -1,0 +1,85 @@
+Question: 1
+
+class Solution {
+public:
+
+    bool canFinish(int energy , vector<vector<int>>&tasks){
+        for(const auto & task : tasks){
+            int actual = task[0];
+            int minimum = task[1];
+
+            if (energy < minimum) return false;
+            energy -= actual;
+        }
+        return true;
+
+        }
+    
+    int minimumEffort(vector<vector<int>>& tasks) {
+        sort(tasks.begin(),tasks.end(),[](const vector<int>& a,const vector<int>& b){
+            return (a[1] - a[0]) > (b[1] - b[0]);
+        });
+
+        int left = 0;//minimum possible answer
+        for(auto& t: tasks) left += t[0];
+
+        int right = 1e9;
+
+        int ans = right;
+
+        while(left<=right){
+            int mid = left + (right-left)/2;
+
+            if(canFinish(mid,tasks)){
+                ans = mid;
+                right = mid-1; // try to find a smaller initial energy
+            }
+            else{
+                left = mid+1;
+            }
+        }
+    return ans;
+    }
+};
+
+
+
+
+Question 2:
+
+class Solution {
+public:
+
+    bool canAchieve(vector<int>&nums,int maxOperations,int penality){
+        long long totalOps = 0;
+        for(int n : nums){
+           totalOps += (n - 1) / penality;
+            
+            if (totalOps > maxOperations) return false;
+        }
+        return true;
+ 
+        }
+    
+    int minimumSize(vector<int>& nums, int maxOperations) {
+       int left = 1;
+        int right = *max_element(nums.begin(), nums.end());
+
+        int ans = right;
+
+        while(left <= right){
+            int mid = left + (right - left)/2;
+
+            if(canAchieve(nums,maxOperations,mid)){
+                ans = mid;
+                //try small
+                right = mid-1;
+            }
+            else{
+                left = mid + 1;
+            }
+        }
+        return ans;
+  
+    }
+};
