@@ -1,0 +1,40 @@
+class Solution {
+  public:
+    bool isCyclic(int V, vector<vector<int>> &edges) {
+        // code here
+            int n = edges.size();
+        
+        vector<vector<int>> adj(V);
+        vector<int> indegree(V, 0);  //indegree 
+        for(auto edge : edges){
+            int u = edge[0];
+            int v = edge[1];
+            adj[u].push_back(v); //amke the adjacency list
+            //increase the indegree side by side
+            indegree[v]++;
+        }
+        
+        queue<int> q;
+        
+        for(int i = 0; i < V; i++){  // 
+            if(indegree[i] == 0){  //for intial nodes .. if indegree is 0 add in the q
+                q.push(i);
+            }
+        }
+        
+        int count = 0;
+        
+        while(!q.empty()){
+            int node = q.front();
+            q.pop();
+            count++;  //found one node increase teh count
+            
+            for(int v : adj[node]){
+                indegree[v]--;
+                if(indegree[v] == 0) q.push(v);
+            }
+        }
+        return count != V;
+        
+    }
+};
